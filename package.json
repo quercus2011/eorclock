@@ -1,0 +1,33 @@
+{
+  "author": {
+    "name": "Quercus Maris",
+    "url": "https://github.com/quercus2011"
+  },
+  "bugs": {
+    "url": "https://github.com/quercus2011/eorclock/issues"
+  },
+  "dependencies": {},
+  "description": "a desktop gadget for FF14 gatherers",
+  "devDependencies": {},
+  "homepage": "https://github.com/quercus2011/eorclock#readme",
+  "keywords": [
+    "eorclock",
+    "clock",
+    "eorzea",
+    "ff14",
+    "ffxiv",
+    "desktop"
+  ],
+  "license": "MIT",
+  "main": "./eorclock.js",
+  "name": "eorclock",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quercus2011/eorclock.git"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "test": "npm run lint"
+  },
+  "version": "0.1.0"
+}
