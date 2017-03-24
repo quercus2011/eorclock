@@ -34,7 +34,7 @@
     "build:linux": "electron-packager . Eorclock --platform=linux --arch=x64",
     "build:mac": "electron-packager . Eorclock --platform=darwin --arch=x64",
     "build:win32": "electron-packager . Eorclock --platform=win32 --arch=ia32",
-    "lint": "eslint *.js",
+    "lint": "eslint *.js && echo Lint passed.",
     "start": "electron .",
     "test": "npm run lint"
   },

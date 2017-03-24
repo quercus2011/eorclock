@@ -3,7 +3,7 @@
 //! license : MIT
 //! https://github.com/quercus2011/eorclock
 
-;(function (global, factory) {
+;(function (global, factory) { // eslint-disable-line no-extra-semi
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory();
   } else if (typeof define === 'function' && define.amd) {
