@@ -7,8 +7,12 @@
     "url": "https://github.com/quercus2011/eorclock/issues"
   },
   "dependencies": {},
-  "description": "a desktop gadget for FF14 gatherers",
-  "devDependencies": {},
+  "description": "A desktop gadget for FF14 gatherers",
+  "devDependencies": {
+    "electron": "^1.4.1",
+    "electron-packager": "^8.5.2",
+    "eslint": "^3.2.0"
+  },
   "homepage": "https://github.com/quercus2011/eorclock#readme",
   "keywords": [
     "eorclock",
@@ -16,17 +20,22 @@
     "eorzea",
     "ff14",
     "ffxiv",
+    "Electron",
     "desktop"
   ],
   "license": "MIT",
-  "main": "./eorclock.js",
+  "main": "main.js",
   "name": "eorclock",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/quercus2011/eorclock.git"
   },
   "scripts": {
-    "lint": "eslint",
+    "build:linux": "electron-packager . Eorclock --platform=linux --arch=x64",
+    "build:mac": "electron-packager . Eorclock --platform=darwin --arch=x64",
+    "build:win32": "electron-packager . Eorclock --platform=win32 --arch=ia32",
+    "lint": "eslint *.js",
+    "start": "electron .",
     "test": "npm run lint"
   },
   "version": "0.1.0"
