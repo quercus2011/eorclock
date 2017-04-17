@@ -2,18 +2,116 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Eorclock</title>
+    <style>
+      body {
+        font-size: 14px;
+      }
+      p, button, td {
+        font-family: monospace;
+        white-space: pre;
+        margin: 0;
+      }
+      #date {
+        float: left;
+        padding-left: 3px;
+      }
+      #buttonForAdd, #buttonForUndo, #buttonForSave, #buttonForConfig {
+        margin-left: 24px;
+      }
+      #buttonForHomepage {
+        float: right;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <div id="header">
+      <p id="date">ET 08:21 now</p>
+      <button id="buttonForAdd">Add</button>
+      <button id="buttonForUndo">Undo</button>
+      <button id="buttonForRedo">Redo</button>
+      <button id="buttonForSave">Save</button>
+      <button id="buttonForLoad">Load</button>
+      <button id="buttonForConfig">Config</button>
+      <select id="lang">
+        <option value="jp" selected>JP</option>
+      </select>
+      <button id="buttonForHomepage">Homepage</button>
+    </div>
+    <table>
+      <tbody>
+        <tr>
+          <td class="subject">ET 00:00</td>
+          <td class="separator">/</td>
+          <td class="localtime">LT 12:34</td>
+          <td class="countdown">(-56m01s,-3361sec)</td>
+          <td class="separator">/</td>
+          <td class="period">1H</td>
+          <td class="remain"></td>
+          <td class="separator">/</td>
+          <td class="job">園芸</td>
+          <td class="type">未知</td>
+          <td class="slot">Slot7</td>
+          <td class="note"><input type="text" size="30"></input></td>
+          <td class="edit"><button class="buttonForEdit">Edit</button></td>
+          <td class="del"><button class="buttonForDel">Del</button></td>
+          <td class="label">#00</td>
+        </tr>
+        <tr>
+          <td class="subject">ET 08:00</td>
+          <td class="separator">/</td>
+          <td class="localtime">LT 06:43</td>
+          <td class="countdown">(-65m13s,-3913sec)</td>
+          <td class="separator">/</td>
+          <td class="period">1H</td>
+          <td class="remain">(-01m35s, -95sec)</td>
+          <td class="separator">/</td>
+          <td class="job">採掘</td>
+          <td class="type">伝説</td>
+          <td class="slot">Slot2</td>
+          <td class="note"><input type="text" size="30"></input></td>
+          <td class="edit"><button class="buttonForEdit">Edit</button></td>
+          <td class="del"><button class="buttonForDel">Del</button></td>
+          <td class="label">#03</td>
+        </tr>
+        <tr>
+          <td class="subject">ET 09:00</td>
+          <td class="separator">/</td>
+          <td class="localtime">LT 07:30</td>
+          <td class="countdown">(-00m51s,  -51sec)</td>
+          <td class="separator">/</td>
+          <td class="period">2H</td>
+          <td class="remain"></td>
+          <td class="separator">/</td>
+          <td class="job">採掘</td>
+          <td class="type">刻限</td>
+          <td class="slot">Slot2</td>
+          <td class="note"><input type="text" size="30"></input></td>
+          <td class="edit"><button class="buttonForEdit">Edit</button></td>
+          <td class="del"><button class="buttonForDel">Del</button></td>
+          <td class="label">#01</td>
+        </tr>
+        <tr>
+          <td class="subject">ET 12:00</td>
+          <td class="separator">/</td>
+          <td class="localtime">LT 09:23</td>
+          <td class="countdown">(-07m45s, -465sec)</td>
+          <td class="separator">/</td>
+          <td class="period">1H</td>
+          <td class="remain"></td>
+          <td class="separator">/</td>
+          <td class="job">園芸</td>
+          <td class="type">未知</td>
+          <td class="slot">Slot7</td>
+          <td class="note"><input type="text" size="30"></input></td>
+          <td class="edit"><button class="buttonForEdit">Edit</button></td>
+          <td class="del"><button class="buttonForDel">Del</button></td>
+          <td class="label">#00</td>
+        </tr>
+      </tbody>
+    </table>
+    <script>
+      require('./eorclock.js')
+    </script>
   </body>
-
-  <script>
-    // You can also require other files to run in this process
-    require('./eorclock.js')
-  </script>
 </html>
