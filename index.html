@@ -7,16 +7,16 @@
       body {
         font-size: 14px;
       }
-      p, button, td {
+      p, button, td, select, #timerForGP {
         font-family: monospace;
         white-space: pre;
         margin: 0;
       }
-      #date {
+      #header > * {
         float: left;
-        padding-left: 3px;
+        margin-left: 3px;
       }
-      #buttonForAdd, #buttonForUndo, #buttonForSave, #buttonForConfig {
+      #buttonForAdd, #buttonForUndo, #buttonForSave, #buttonForConfig, #timerForGP {
         margin-left: 24px;
       }
       #buttonForHomepage {
@@ -39,6 +39,7 @@
       <select id="lang">
         <option value="jp" selected>JP</option>
       </select>
+      <div id="timerForGP">GP <input type="text" size="3" value="650" /> ⇒ <span>379sec (6m19s)</span></div>
       <button id="buttonForHomepage">Homepage</button>
     </div>
     <table>
