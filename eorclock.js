@@ -158,7 +158,7 @@
         if (! list || ! list.length) return;
         const now = new Date();
         list.forEach((func) => func(now));
-        const period = next(now) - now;
+        const period = next(now) - now + 50; // "50ms" is a margin to avoid duplicating same time
         if (! (period > 0)) throw 'ERROR: loop(): BUG';
         setTimeout(loop.bind(null, list, next), period);
       }
