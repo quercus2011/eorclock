@@ -56,6 +56,26 @@
         return padStart(value, 2, '0');
       }
 
+      function toMS(milliseconds) {
+        const minutes = Math.floor(milliseconds/(60*1000));
+        const seconds = Math.floor(milliseconds/1000) % 60;
+        if (minutes > 99) throw 'ERROR: toMS(): too large argument: "' + milliseconds + '"';
+        return to2digits(minutes) + 'm' + to2digits(seconds) + 's';
+      }
+
+      function toHMS(arg) {
+        const date = new Date(1*arg);
+        return [date.getHours(), date.getMinutes(), date.getSeconds()].map(to2digits).join(':');
+      }
+
+      function toCountDown(enableMS, enableSec, subject, now) {
+        const remain = 1000*Math.floor(((subject >= now ? 0 : et2lt('24:00')) + subject - now)/1000);
+        if (remain < 0) throw 'ERROR: toCountDown(): BUG';
+        const sec = remain/1000;
+        if (sec > 9999) throw 'ERROR: toCountDown(): too large remain: "' + remain + '"';
+        return '(' + [enableMS && ('-' + toMS(remain)), enableSec && padStart('-' + sec + 'sec', 8, ' ')].filter((e) => e).join(',') + ')';
+      }
+
       //======================================================================
 
       const epoch = Date.UTC(1970, 1-1, 1, 0, 0, 0, 0); // "1970/Jan/01 00:00:00 UTC" (UNIX Epoch)
@@ -85,8 +105,8 @@
         const value = lt*1;
         if (isNaN(value) || ! isFinite(value)) throw 'ERROR: floorToDateline(): invalid argument: "' + lt + '"';
         if (value < epoch) throw 'ERROR: floorToDateline(): too small argument: "' + lt + '"';
-        const elapsed = Math.floor((value-epoch)/ratio);
-        return value - (elapsed % (24*60)) * ratio; // may has decimal fractions
+        const elapsedDays = Math.floor((value-epoch)/ratio/(24*60));
+        return elapsedDays*(24*60)*ratio; // may has decimal fractions
       }
 
       //======================================================================
@@ -96,11 +116,32 @@
       }
 
       function updateRow(dom, now) {
-        // dummy (not implement yet)
         let subject = et2lt(dom.getElementsByClassName('subject')[0].innerHTML) + floorToDateline(now);
+        if (subject > 1*now) {
+          subject -= et2lt('24:00');
+        }
+        if (subject > 1*now) throw 'ERROR: updateRow(): BUG';
+
+        const periodText = dom.getElementsByClassName('period')[0].innerHTML;
+        if (! /^[1-9]?\dH$/.test(periodText)) throw 'ERROR: updateRow(): invalid period: "' + periodText + '"';
+        const periodHours = parseInt(periodText, 10);
+        if (! periodHours || isNaN(periodHours) || ! isFinite(periodHours)) throw 'ERROR: updateRow(): invalid period: "' + periodText + '"';
+        if (periodHours >= 24) throw 'ERROR: updateRow(): too large period: "' + periodText + '"';
+        const period = et2lt(to2digits(periodHours) + ':00');
+
+        const limit = subject + period;
+        if (limit > 1*now) {
+          dom.classList.add('active');
+        } else {
+          dom.classList.remove('active');
+        }
+
         if (subject < 1*now) subject += et2lt('24:00');
         if (subject < 1*now) throw 'ERROR: updateRow(): BUG';
-        return subject;
+
+        dom.getElementsByClassName('localtime')[0].innerHTML = 'LT ' + toHMS(subject);
+        dom.getElementsByClassName('countdown')[0].innerHTML = toCountDown(true, true, subject, now);
+        dom.getElementsByClassName('remain')[0].innerHTML = toCountDown(true, true, limit, now);
       }
 
       function loop(list, next) {
