@@ -68,12 +68,20 @@
         return [date.getHours(), date.getMinutes(), date.getSeconds()].map(to2digits).join(':');
       }
 
-      function toCountDown(enableMS, enableSec, subject, now) {
+      function calcCountDown(subject, now) {
         const remain = 1000*Math.floor(((subject >= now ? 0 : et2lt('24:00')) + subject - now)/1000);
-        if (remain < 0) throw 'ERROR: toCountDown(): BUG';
-        const sec = remain/1000;
-        if (sec > 9999) throw 'ERROR: toCountDown(): too large remain: "' + remain + '"';
-        return '(' + [enableMS && ('-' + toMS(remain)), enableSec && padStart('-' + sec + 'sec', 8, ' ')].filter((e) => e).join(',') + ')';
+        if (remain < 0) throw 'ERROR: calcCountDown(): BUG';
+        if (remain > 9999*1000) throw 'ERROR: calcCountDown(): too large remain: "' + remain + '"';
+        if (remain > (99*60+99)*1000) throw 'ERROR: calcCountDown(): too large remain: "' + remain + '"';
+        return remain;
+      }
+
+      function toCountDownMS(subject, now) {
+        return '-' + toMS(calcCountDown(subject, now));
+      }
+
+      function toCountDownSec(subject, now) {
+        return padStart('-' + (calcCountDown(subject, now)/1000) + 'sec', 8, ' ');
       }
 
       function writeContent(dom, className, content, enableCheck) {
@@ -150,8 +158,10 @@
         if (subject < 1*now) throw 'ERROR: updateRow(): BUG';
 
         writeContent(dom, 'localtime', 'LT ' + toHMS(subject), false);
-        writeContent(dom, 'countdown', toCountDown(true, true, subject, now), true);
-        writeContent(dom, 'remain', toCountDown(true, true, limit, now), true);
+        writeContent(dom, 'countdownMS', toCountDownMS(subject, now), true);
+        writeContent(dom, 'countdownSec', toCountDownSec(subject, now), true);
+        writeContent(dom, 'remainMS', toCountDownMS(limit, now), true);
+        writeContent(dom, 'remainSec', toCountDownSec(limit, now), true);
       }
 
       function loop(list, next) {
