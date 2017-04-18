@@ -43,7 +43,7 @@
 
       //======================================================================
 
-      const epoch = Date.UTC(2010, 7-1, 12, 1+9, 0, 0, 0); // "2010/Jul/12 01:00:00 JST"
+      const epoch = Date.UTC(1970, 1-1, 1, 0, 0, 0, 0); // "1970/Jan/01 00:00:00 UTC" (UNIX Epoch)
       const ratio = 70*60*1000/(24*60); // 24 hours of Eorzea Time is equal to 70 minutes of Local Time (earth time)
 
       function et2lt(et) {
