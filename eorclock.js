@@ -19,6 +19,21 @@
 
       //======================================================================
 
+      function partialApply() {
+        const args0 = Array.prototype.concat.apply([], arguments);
+        const func = args0.shift();
+        if (typeof func !== 'function') throw 'ERROR: partialApply(): 1st argument should be a function';
+        if (! func.length) throw 'ERROR: partialApply(): 1st argument should be a function which has at least one parameter';
+        if (args0.length >= func.length) throw 'ERROR: partialApply(): too many arguments';
+        return function partialApplyHelper() {
+          if (! arguments.length) throw 'ERROR: partialApplyHelper(): too few arguments';
+          const args = Array.prototype.concat.apply(args0, arguments);
+          if (args.length >= func.length) return func.apply(null, args);
+          args.unshift(func);
+          return partialApply.apply(null, args);
+        };
+      }
+
       function padStart(org, length, pad) {
         if (org === undefined || org === null) throw 'ERROR: padStart(): invalid 1st argument';
         if (typeof org !== 'string') return padStart('' + org, length, pad);
@@ -55,6 +70,7 @@
       }
 
       function lt2et(lt) {
+        // allow LT with decimal fractions
         const value = lt*1;
         if (isNaN(value) || ! isFinite(value)) throw 'ERROR: lt2et(): invalid argument: "' + lt + '"';
         if (value < epoch) throw 'ERROR: lt2et(): too small argument: "' + lt + '"';
@@ -65,6 +81,7 @@
       }
 
       function floorToDateline(lt) {
+        // allow LT with decimal fractions
         const value = lt*1;
         if (isNaN(value) || ! isFinite(value)) throw 'ERROR: floorToDateline(): invalid argument: "' + lt + '"';
         if (value < epoch) throw 'ERROR: floorToDateline(): too small argument: "' + lt + '"';
@@ -74,21 +91,39 @@
 
       //======================================================================
 
-      function updateWallClock(now) {
-        const dom = doc.getElementById('date');
-        if (! dom) throw 'ERROR: #date is not found';
+      function updateWallClock(dom, now) {
         dom.innerHTML = dom.innerHTML.replace(/\b\d\d:\d\d\b/, lt2et(now));
+      }
+
+      function updateRow(dom, now) {
+        // dummy (not implement yet)
+        let subject = et2lt(dom.getElementsByClassName('subject')[0].innerHTML) + floorToDateline(now);
+        if (subject < 1*now) subject += et2lt('24:00');
+        if (subject < 1*now) throw 'ERROR: updateRow(): BUG';
+        return subject;
+      }
+
+      function loop(list, next) {
+        if (! list || ! list.length) return;
+        const now = new Date();
+        list.forEach((func) => func(now));
+        const period = next(now) - now;
+        if (! (period > 0)) throw 'ERROR: loop(): BUG';
+        setTimeout(loop.bind(null, list, next), period);
       }
 
       //======================================================================
 
-      function processEorzeaTime() {
-        const now = Date.now();
-        updateWallClock(now);
-        setTimeout(processEorzeaTime, Math.ceil(floorToDateline(now) + et2lt(lt2et(now)) + et2lt('00:01')) - now);
-      }
+      const listForET = Array.prototype.concat.apply([], [
+        partialApply(updateWallClock, doc.getElementById('date')),
+      ]);
 
-      processEorzeaTime();
+      const listForLT = Array.prototype.concat.apply([], [
+        Array.prototype.map.call(doc.getElementsByTagName('tr'), (e) => partialApply(updateRow, e)),
+      ]);
+
+      loop(listForET, (now) => Math.ceil(floorToDateline(now) + et2lt(lt2et(now)) + et2lt('00:01')));
+      loop(listForLT, (now) => new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), 1+now.getSeconds()));
     };
   };
 
