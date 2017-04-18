@@ -80,7 +80,7 @@
         const target = className ? dom.getElementsByClassName(className)[0] : dom;
         if (! target) throw 'ERROR: writeContent(): target is not found';
         if (target.innerHTML === content) {
-          if (enableCheck) console.trace('WARNING: writeContent(): detect duplicated update: ', target, content);
+          if (enableCheck) win.console.trace('WARNING: writeContent(): detect duplicated update: ', target, content);
         } else {
           target.innerHTML = content;
         }
