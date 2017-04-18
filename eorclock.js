@@ -76,6 +76,16 @@
         return '(' + [enableMS && ('-' + toMS(remain)), enableSec && padStart('-' + sec + 'sec', 8, ' ')].filter((e) => e).join(',') + ')';
       }
 
+      function writeContent(dom, className, content, enableCheck) {
+        const target = className ? dom.getElementsByClassName(className)[0] : dom;
+        if (! target) throw 'ERROR: writeContent(): target is not found';
+        if (target.innerHTML === content) {
+          if (enableCheck) console.trace('WARNING: writeContent(): detect duplicated update: ', target, content);
+        } else {
+          target.innerHTML = content;
+        }
+      }
+
       //======================================================================
 
       const epoch = Date.UTC(1970, 1-1, 1, 0, 0, 0, 0); // "1970/Jan/01 00:00:00 UTC" (UNIX Epoch)
@@ -112,7 +122,7 @@
       //======================================================================
 
       function updateWallClock(dom, now) {
-        dom.innerHTML = dom.innerHTML.replace(/\b\d\d:\d\d\b/, lt2et(now));
+        writeContent(dom, undefined, 'ET ' + lt2et(now) + ' now');
       }
 
       function updateRow(dom, now) {
@@ -139,9 +149,9 @@
         if (subject < 1*now) subject += et2lt('24:00');
         if (subject < 1*now) throw 'ERROR: updateRow(): BUG';
 
-        dom.getElementsByClassName('localtime')[0].innerHTML = 'LT ' + toHMS(subject);
-        dom.getElementsByClassName('countdown')[0].innerHTML = toCountDown(true, true, subject, now);
-        dom.getElementsByClassName('remain')[0].innerHTML = toCountDown(true, true, limit, now);
+        writeContent(dom, 'localtime', 'LT ' + toHMS(subject), false);
+        writeContent(dom, 'countdown', toCountDown(true, true, subject, now), true);
+        writeContent(dom, 'remain', toCountDown(true, true, limit, now), true);
       }
 
       function loop(list, next) {
